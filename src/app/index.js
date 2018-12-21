@@ -56,7 +56,8 @@ const app = {
   render() {
     let polarCoords =
       range(this.n)
-        .map(i => [Math.pow(i, this.power) * this.gap, i * this.phi])
+        .map(i => [(i*i + Math.sqrt(i) - i) * this.gap * 0.01, i * this.phi])
+        // .map(i => [Math.pow(i, this.power) * this.gap, i * this.phi])
     return h(ROOT_ELEMENT, [
       this.createInput('size', 100, 1000),
       this.createInput('n', 0, 2000),
