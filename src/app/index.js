@@ -31,10 +31,13 @@ function range(start, stop, step) {
 
 
 const app = {
-  size: 200,
-  n: 0,
+  size: 500,
+  n: 500,
   phi: (Math.sqrt(5) - 1) * Math.PI,
+  gap: 10, // dense vs loose
+  power: 0.5, // distribution
   createInput(targetProperty, min, max, step) {
+    if (!step) step = 'any';
     return h('div', [
       h('label', [targetProperty]),
       h('input', {
@@ -44,19 +47,22 @@ const app = {
         step,
         value: this[targetProperty],
         oninput: evt => {
-          this[targetProperty] = evt.target.value
+          this[targetProperty] = Number(evt.target.value)
         }
-      })
+      }),
+      this[targetProperty].toFixed(2)
     ])
   },
   render() {
     let polarCoords =
       range(this.n)
-        .map(i => [Math.pow(i, 0.75) * 3.2, i * this.phi])
+        .map(i => [Math.pow(i, this.power) * this.gap, i * this.phi])
     return h(ROOT_ELEMENT, [
       this.createInput('size', 100, 1000),
       this.createInput('n', 0, 2000),
       this.createInput('phi', 0, 2 * Math.PI, 'any'),
+      this.createInput('gap', 0, 20),
+      this.createInput('power', 0.1, 3),
       h('svg', {
         width: this.size,
         height: this.size,
@@ -101,5 +107,4 @@ const app = {
 }
 
 projector.replace(document.querySelector(ROOT_ELEMENT), () => app.render())
-app.n = 100
 projector.scheduleRender()
